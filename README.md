@@ -1,0 +1,2 @@
+# blogDjango
+Blog de ejemplo

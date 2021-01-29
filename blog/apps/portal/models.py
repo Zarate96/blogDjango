@@ -17,11 +17,11 @@ class Category(models.Model):
 
 class Author(models.Model):
     name = models.CharField('Author name', max_length=100, null=False, blank=False)
-    last_name = models.CharField('Category name', max_length=100, null=False, blank=False)
+    last_name = models.CharField('Last name', max_length=100, null=False, blank=False)
     facebook = models.URLField('Facebook', max_length=100, null=True, blank=True)
     instagram = models.URLField('Instagram', max_length=100, null=True, blank=True)
     site_web = models.URLField('Site web', max_length=100, null=True, blank=True)
-    email = models.EmailField('Category name', max_length=100, null=False, blank=False)
+    email = models.EmailField('Email', max_length=100, null=False, blank=False)
     state = models.BooleanField('Author state', default=True)
     date_creation = models.DateField('Cretion date', auto_now=False, auto_now_add = True)
 

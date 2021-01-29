@@ -1,18 +1,63 @@
 from django.shortcuts import render
+from django.shortcuts import get_object_or_404
+from django.db.models import Q
+from .models import *
 
 # Create your views here.
 
 def home(request):
-    return render(request, 'index.html', {'title':'Home', 'image':'img/home-bg.jpg'})
+    queryset = request.GET.get("search")
+    posts = Post.objects.filter(state=True)
+    if queryset:
+        posts = Post.objects.filter(
+            Q(title__icontains = queryset)|
+            Q(description__icontains = queryset)
+        ).distinct()
+    context = {
+        'title':'Home',
+        'image':'img/home-bg.jpg',
+        'posts':posts
+    }
+    return render(request, 'index.html', context)
 
 def programming(request):
-    return render(request, 'programming.html', {'title':'Programming', 'image':'img/programming.jpg'})
+    posts = Post.objects.filter(
+        state=True,
+        category = Category.objects.get(name='Programming')
+    )
+    context = {
+        'title':'Home',
+        'image':'img/programming.jpg',
+        'posts':posts
+    }
+    return render(request, 'programming.html', context)
 
 def articles(request):
-    return render(request, 'articles.html', {'title':'Articles', 'image':'img/articles.jpg'})
+    posts = Post.objects.filter(
+        state=True,
+        category = Category.objects.get(name__iexact='Articles')
+    )
+    context = {
+        'title':'Home',
+        'image':'img/articles.jpg',
+        'posts':posts
+    }
+    return render(request, 'articles.html', context)
 
 def tutorials(request):
     return render(request, 'tutorials.html', {'title':'Tutorials', 'image':'img/tutorials.jpg'})
+
+def contents(request):
+    return render(request, 'contents.html', {'title':'Contents', 'image':'img/contents.jpg'})
+
+def detallePost(request,slug):
+    post = get_object_or_404(Post,slug=slug)
+    context = {
+        'title': post.title,
+        'image': post.image,
+        'post': post
+    }
+    return render(request, 'post.html', context)
 
 def contact(request):
     return render(request, 'contact.html', {'title':'Contact', 'image':'img/contact.jpg'})

@@ -29,7 +29,7 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
       <div class="container">
-        <a class="navbar-brand" href="index.html">Start Bootstrap</a>
+        <a class="navbar-brand" href="{% url 'blog:home' %}">HZarate Blog</a>
         <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
           Menu
           <i class="fas fa-bars"></i>
@@ -38,6 +38,9 @@
           <ul class="navbar-nav ml-auto">
             <li class="nav-item">
               <a class="nav-link" href="{% url 'blog:home' %}">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'blog:contents' %}">Contents</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="{% url 'blog:programming' %}">Programming</a>
@@ -49,9 +52,6 @@
               <a class="nav-link" href="{% url 'blog:tutorials' %}">Tutorials</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="post.html">Sample Post</a>
-            </li>
-            <li class="nav-item">
               <a class="nav-link" href="{% url 'blog:contact' %}">Contact</a>
             </li>
           </ul>
@@ -60,21 +60,76 @@
     </nav>
 
     <!-- Page Header -->
-    <header class="masthead" style="background-image: url({% static ''|add:image|add:'' %})">
-      <div class="overlay"></div>
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-8 col-md-10 mx-auto">
-            <div class="site-heading">
-              <h2>{{title}}</h2>
+    {% block header %}
+      <header class="masthead" style="background-image: url({% static ''|add:image|add:'' %})">
+        <div class="overlay"></div>
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto">
+              <div class="site-heading">
+                <h2>{{title}}</h2>
+              </div>
             </div>
           </div>
         </div>
+      </header>
+    {% endblock %}
+
+    {% block search %}
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12 search">
+          <form method="GET">
+            <div id="custom-search-input">
+              <div class="input-group col-md-12">
+                <input type="text" name="search" value="{{request.GET.search}}" class="form-control" placeholder="Search..">
+                <span class="input-group-list">
+                  <i class="icon icon-search"></i>
+                  <button type="submit" name="button" class="boton btn-success">Search</button>
+                </span>
+              </div>
+            </div>
+          </form>
+        </div>
       </div>
-    </header>
+    </div>
+    {% endblock %}
 
     <!-- Main Content -->
     {% block content %}
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-md-10 mx-auto">
+            {% if posts %}
+              {% for post in posts %}
+                <div class="post-preview">
+                  <a href="{% url 'blog:detallePost' post.slug %}">
+                    <h2 class="post-title">
+                      {{post.title}}
+                    </h2>
+                    <h3 class="post-subtitle">
+                      {{post.description}}
+                    </h3>
+                  </a>
+                  <p class="post-meta">Posted by
+                    <a href="#">{{post.author}}</a>
+                    {{post.date_creation}}</p>
+                  </div>
+                  <hr>
+                {% endfor %}
+                <!-- Pager -->
+                <div class="clearfix">
+                  <a class="btn btn-primary float-right" href="#">Older Posts &rarr;</a>
+                </div>
+              {% else %}
+                <div class="container mt-3">
+                  <h2>There aren't post</h2>
+                </div>
+              {% endif %}
+          </div>
+        </div>
+      </div>
+      <hr>
     {% endblock %}
 
     <!-- Footer -->
@@ -115,6 +170,7 @@
     </footer>
 
     <!-- Bootstrap core JavaScript -->
+    <script src="https://kit.fontawesome.com/a310f58f3b.js" crossorigin="anonymous"></script>
     <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
     <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 
